@@ -53,13 +53,22 @@ jobs:
       - name: Jfrog-setup
         uses: jfrog/setup-jfrog-cli@v4
         with:
-          jfrog_url: ${{ secrets.JFROG_URL }}
-          jfrog_user: ${{ secrets.JFROG_USER }}
-          jfrog_password: ${{ secrets.JFROG_API_KEY }}
-          
+          version: latest
+
+      - name: Configure JFrog CLI
+        run: jfrog rt config --url=${{ secrets.JFROG_URL }} --user=${{ secrets.JFROG_USER }} --apikey=${{ secrets.JFROG_API_KEY }} --interactive=false
+
       - name: Upload to JFrog Artifactory
-        run: jfrog rt u "build.tar.gz" "next-landing-page-generic-local/builds/" --url=${{ secrets.JFROG_URL }}
+        run: jfrog rt u "build.tar.gz" "next-landing-page-generic-local/builds/"
+        shell: /usr/bin/bash -e {0}
         env:
+          JFROG_CLI_ENV_EXCLUDE: *password*;*secret*;*key*;*token*;*auth*;JF_ARTIFACTORY_*;JF_ENV_*;JF_URL;JF_USER;JF_PASSWORD;JF_ACCESS_TOKEN
+          JFROG_CLI_OFFER_CONFIG: false
+          JFROG_CLI_BUILD_NAME: Next.js Landing page CI Pipeline
+          JFROG_CLI_BUILD_NUMBER: 5
+          JFROG_CLI_BUILD_URL: https://github.com/kyawzawaungdevops/next.js-ci-pipeline/actions/runs/9887326816
+          JFROG_CLI_USER_AGENT: setup-jfrog-cli-github-action/4.1.3
+          JFROG_CLI_COMMAND_SUMMARY_OUTPUT_DIR: /home/runner/work/_temp
           JFROG_URL: ${{ secrets.JFROG_URL }}
           JFROG_USER: ${{ secrets.JFROG_USER }}
           JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
