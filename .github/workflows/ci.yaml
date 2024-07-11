@@ -57,7 +57,7 @@ jobs:
           JF_URL: ${{ vars.JFROG_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_API_KEY }} 
 
-      - name: Push Build to Jfrog Artifactory
+      - name: Push Build to Jfrog-Artifactory
         run: |
           export BUILD_NAME="next.js-build"
           export BUILD_MODULE="next.js-module"
