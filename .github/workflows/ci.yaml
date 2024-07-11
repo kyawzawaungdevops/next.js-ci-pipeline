@@ -1,0 +1,69 @@
+name: Next.js Landing page CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16.x'
+        
+    - name: Cache Node.js packge manager
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
+
+    - name: Build project
+      run: npm run build
+
+    - name: Cache Next.js build cache
+      uses: actions/cache@v2
+      with:
+        path: .next/cache
+        key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}
+          ${{ runner.os }}-next-
+
+    - name: Archive artifacts
+      run: tar -czf build.tar.gz .next
+
+    - name: Install JFrog CLI
+      run: curl -fL https://getcli.jfrog.io | sh && sudo mv jfrog /usr/local/bin/
+
+    - name: Configure JFrog CLI
+      env:
+        JFROG_URL: ${{ secrets.JFROG_URL }}
+        JFROG_USER: ${{ secrets.JFROG_USER }}
+        JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
+      run: |
+        jfrog rt config --url $JFROG_URL --user $JFROG_USER --apikey $JFROG_API_KEY
+
+    - name: Upload to JFrog Artifactory
+      run: jfrog rt u "build.tar.gz" "next-landing-page-generic-local/"
+      env:
+        JFROG_URL: ${{ secrets.JFROG_URL }}
+        JFROG_USER: ${{ secrets.JFROG_USER }}
+        JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
