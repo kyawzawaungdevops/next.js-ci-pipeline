@@ -56,7 +56,7 @@ jobs:
           version: latest
 
       - name: Configure JFrog CLI
-        run: jfrog rt c --url=${{ secrets.JFROG_URL }} --user=${{ secrets.JFROG_USER }} --apikey=${{ secrets.JFROG_API_KEY }} --interactive=false
+        run: jfrog rt config --url=${{ secrets.JFROG_URL }} --user=${{ secrets.JFROG_USER }} --apikey=${{ secrets.JFROG_API_KEY }} --interactive=false
 
       - name: Upload to JFrog Artifactory
         run: jfrog rt u "build.tar.gz" "next-landing-page-generic-local/builds/"
