@@ -56,3 +56,15 @@ jobs:
           JF_URL: ${{ secrets.JFROG_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_API_KEY }} 
 
+      - name: Push Build to Artifactory
+        run: |
+          echo "test file " > test.txt
+          export BUILD_NAME="my-build"
+          export BUILD_MODULE="my-module"
+          export BUILD_NUMBER="1"
+
+
+          export PATH_TO_DIRECTORY="/"
+          
+          jf rt upload "test.txt" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
+
