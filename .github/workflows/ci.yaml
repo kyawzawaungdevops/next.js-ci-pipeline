@@ -54,5 +54,5 @@ jobs:
       - uses: jfrog/setup-jfrog-cli@v4
         env:
           JF_URL: ${{ secrets.JFROG_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.JJFROG_API_KEY }} 
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_API_KEY }} 
 
