@@ -50,12 +50,10 @@ jobs:
     - name: Archive artifacts
       run: tar -czf build.tar.gz .next
 
-    - name: Install JFrog CLI
-      run: curl -fL https://getcli.jfrog.io | sh && sudo mv jfrog /usr/local/bin/
 
-      - name: Jfrog-setup
-      - uses: jfrog/setup-jfrog-cli@v4
-        env:
+    - name: Jfrog-setup
+    - uses: jfrog/setup-jfrog-cli@v4
+      env:
             # JFrog platform url (for example: https://acme.jfrog.io)
             JF_URL: ${{ secrets.JFROG_URL }}
 
