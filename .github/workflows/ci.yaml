@@ -13,60 +13,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 'v18.17.0'
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.17.0'
         
-    - name: Cache Node.js packge manager
-      uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+      - name: Cache Node.js package manager
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Run tests
-      run: npm test
+      - name: Run tests
+        run: npm test
 
-    - name: Build project
-      run: npm run build
+      - name: Build project
+        run: npm run build
 
-    - name: Cache Next.js build cache
-      uses: actions/cache@v2
-      with:
-        path: .next/cache
-        key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}
-          ${{ runner.os }}-next-
+      - name: Cache Next.js build cache
+        uses: actions/cache@v2
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}
+            ${{ runner.os }}-next-
 
-    - name: Archive artifacts
-      run: tar -czf build.tar.gz .next
+      - name: Archive artifacts
+        run: tar -czf build.tar.gz .next
 
-
-    - name: Jfrog-setup
-    - uses: jfrog/setup-jfrog-cli@v4
-      env:
-            # JFrog platform url (for example: https://acme.jfrog.io)
-            JF_URL: ${{ secrets.JFROG_URL }}
-
-            # Basic authentication credentials
-            JF_USER: ${{ secrets.JFROG_USER }}
-            JF_PASSWORD: ${{ secrets.JFROG_API_KEY }}
-
-      # JFrog platform access token (if JF_USER and JF_PASSWORD are not provided)
-      # JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-
-    - name: Upload to JFrog Artifactory
-      run: jfrog rt u "build.tar.gz" "next-landing-page-generic-local/"
-      env:
-        JFROG_URL: ${{ secrets.JFROG_URL }}
-        JFROG_USER: ${{ secrets.JFROG_USER }}
-        JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
+      - name: Jfrog-setup
+        uses: jfrog/setup-jfrog-cli@v4
+        with:
+          jfrog_url: ${{ secrets.JFROG_URL }}
+          jfrog_user: ${{ secrets.JFROG_USER }}
+          jfrog_password: ${{ secrets.JFROG_API_KEY }}
+          
+      - name: Upload to JFrog Artifactory
+        run: jfrog rt u "build.tar.gz" "next-landing-page-generic-local/"
+        env:
+          JFROG_URL: ${{ secrets.JFROG_URL }}
+          JFROG_USER: ${{ secrets.JFROG_USER }}
+          JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
