@@ -38,7 +38,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Cache Next.js build cache
+      - name: Cache Next.js app cache
         uses: actions/cache@v2
         with:
           path: .next/cache
