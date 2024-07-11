@@ -62,7 +62,7 @@ jobs:
         run: jfrog rt u "build.tar.gz" "next-landing-page-generic-local/builds/"
         shell: /usr/bin/bash -e {0}
         env:
-          JFROG_CLI_ENV_EXCLUDE: *password*;*secret*;*key*;*token*;*auth*;JF_ARTIFACTORY_*;JF_ENV_*;JF_URL;JF_USER;JF_PASSWORD;JF_ACCESS_TOKEN
+          JFROG_CLI_ENV_EXCLUDE: "*password*;*secret*;*key*;*token*;*auth*;JF_ARTIFACTORY_*;JF_ENV_*;JF_URL;JF_USER;JF_PASSWORD;JF_ACCESS_TOKEN"
           JFROG_CLI_OFFER_CONFIG: false
           JFROG_CLI_BUILD_NAME: Next.js Landing page CI Pipeline
           JFROG_CLI_BUILD_NUMBER: 5
