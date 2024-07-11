@@ -58,7 +58,7 @@ jobs:
           jfrog_password: ${{ secrets.JFROG_API_KEY }}
           
       - name: Upload to JFrog Artifactory
-        run: jfrog rt u "build.tar.gz" "next-landing-page-generic-local/"
+        run: jfrog rt u "build.tar.gz" --url=${{ secrets.JFROG_URL }}
         env:
           JFROG_URL: ${{ secrets.JFROG_URL }}
           JFROG_USER: ${{ secrets.JFROG_USER }}
