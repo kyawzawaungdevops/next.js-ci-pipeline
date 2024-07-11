@@ -48,7 +48,7 @@ jobs:
             ${{ runner.os }}-next-
 
       - name: Archive artifacts
-        run: tar -czf test.tar.gz .next
+        run: tar -czf nextjs-build.tar.gz .next
 
 
       - name: Jfrog-setup
@@ -57,7 +57,7 @@ jobs:
           JF_URL: ${{ vars.JFROG_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JFROG_API_KEY }} 
 
-      - name: Push Build to Jfrog-Artifactory
+      - name: Push Build to Jfrog-Artifactorys
         run: |
           export BUILD_NAME="next.js-build"
           export BUILD_MODULE="next.js-module"
@@ -66,5 +66,5 @@ jobs:
 
           export PATH_TO_DIRECTORY="/"
           
-          jf rt upload "test.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
+          jf rt upload "nextjs-build.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
 
