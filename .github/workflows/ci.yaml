@@ -58,7 +58,6 @@ jobs:
 
       - name: Push Build to Artifactory
         run: |
-          echo "test file " > test.txt
           export BUILD_NAME="my-build"
           export BUILD_MODULE="my-module"
           export BUILD_NUMBER="1"
@@ -66,5 +65,5 @@ jobs:
 
           export PATH_TO_DIRECTORY="/"
           
-          jf rt upload "test.txt" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
+          jf rt upload "build.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
 
