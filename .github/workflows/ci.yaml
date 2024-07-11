@@ -48,7 +48,7 @@ jobs:
             ${{ runner.os }}-next-
 
       - name: Archive artifacts
-        run: tar -czf next.js-build.tar.gz .next
+        run: tar -czf test.tar.gz .next
 
 
       - name: Jfrog-setup
@@ -66,5 +66,5 @@ jobs:
 
           export PATH_TO_DIRECTORY="/"
           
-          jf rt upload "next.js-build.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
+          jf rt upload "test.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
 
