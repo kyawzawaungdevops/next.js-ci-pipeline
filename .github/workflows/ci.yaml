@@ -48,7 +48,7 @@ jobs:
             ${{ runner.os }}-next-
 
       - name: Archive artifacts
-        run: tar -czf build.tar.gz .next
+        run: tar -czf next.js-build.tar.gz .next
 
 
       - uses: jfrog/setup-jfrog-cli@v4
@@ -58,8 +58,8 @@ jobs:
 
       - name: Push Build to Artifactory
         run: |
-          export BUILD_NAME="my-build"
-          export BUILD_MODULE="my-module"
+          export BUILD_NAME="next.js-build"
+          export BUILD_MODULE="next.js-module"
           export BUILD_NUMBER="1"
 
 
