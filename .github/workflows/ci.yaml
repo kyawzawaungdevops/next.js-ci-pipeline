@@ -1,4 +1,4 @@
-name: Next.js Landing page CI Pipeline
+name: Next.js Landing Page CI Pipeline
 
 on:
   push:
@@ -13,59 +13,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v3  # Update to latest version
+      - name: Setup Node.js
+        uses: actions/setup-node@v3  # Update to latest version
         with:
-          node-version: '18.17.0'
-      - name: Cache Node.js package manager
-        id: cache-node
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: '18'       # Use latest 18.x version
+          cache: 'npm'             # Enable npm caching
+      - name: Install dependencies
+        run: npm ci                 # Use ci for faster, consistent installs in CI
 
-  dependencies:
+  build:
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Use Node.js from cache
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '18.17.0'
+          node-version: '18'
           cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - name: Install dependencies
-        run: npm install
-
-  build:
-    needs: dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Use Node.js from cache
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18.17.0'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - name: Build project
-        run: npm run build
-      - name: Cache Next.js app cache
-        uses: actions/cache@v2
+      - name: Restore Next.js cache
+        uses: actions/cache@v3
         with:
           path: .next/cache
           key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}
             ${{ runner.os }}-next-
-      - name: Archive artifacts
-        run: tar -czf nextjs-build.tar.gz .next
+      - name: Build project
+        run: npm run build
 
   deploy:
     needs: build
@@ -80,6 +57,6 @@ jobs:
         run: |
           export BUILD_NAME="next.js-build"
           export BUILD_MODULE="next.js-module"
-          export BUILD_NUMBER="1"
-          export PATH_TO_DIRECTORY="/"
-          jf rt upload "nextjs-build.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
+          export BUILD_NUMBER=${{ github.run_number }}  # Use GitHub's run number
+          export PATH_TO_DIRECTORY="."                  # Upload from current directory
+          jf rt u "next/.next/**/*" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
