@@ -57,6 +57,9 @@ jobs:
       - name: Build Next.js Project
         run: npm run build
 
+      - name: Archive artifacts
+        run: tar -czf nextjs-build.tar.gz .next
+
       # ... Your other build steps (test, deploy) ...
 
 
