@@ -31,9 +31,9 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os}}-build}}-
-  
-  build:  # The new job to reuse the cache
+            ${{ runner.os }}-build-
+
+  build:  
     needs: setup
     runs-on: ubuntu-latest
     steps:
@@ -43,18 +43,21 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm' # This still needs to be here for validation
+          cache: 'npm'
       - name: Restore node modules
         id: restore-npm-cache 
         uses: actions/cache@v3
         env:
-          cache-name: cache-node-modules
+cache-name: cache-node-modules
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock. }}-build-${{ env.cache-name }}-
-            ${{ runner }}-
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
       - name: Verify cache restoration
         if: steps.restore-npm-cache.outputs.cache-hit != 'true'
-        run: echo "Error: npm cache not found" && exit 1 # Exit if cache wasn't found
+        run: echo "Error: npm cache not found" && exit 1 
 
       # ... Your other build steps (test, build, deploy) ...
+
