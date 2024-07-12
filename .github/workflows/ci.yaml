@@ -46,7 +46,7 @@ jobs:
 
 
   build:
-    needs: test
+    needs: dependencies
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
