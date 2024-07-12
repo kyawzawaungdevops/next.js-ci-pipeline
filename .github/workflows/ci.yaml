@@ -98,4 +98,17 @@ jobs:
          name: nextjs-build
       - name: Display structure of downloaded files
         run: ls -R
+      - name: Jfrog-setup
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: ${{ vars.JFROG_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JFROG_API_KEY }} 
+      - name: Push Build to Jfrog-Artifactorys
+        run: |
+          export BUILD_NAME="next.js-build"
+          export BUILD_MODULE="next.js-module"
+          export BUILD_NUMBER="1"
+          export PATH_TO_DIRECTORY="/"
+          
+          jf rt upload "nextjs-build.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
 
