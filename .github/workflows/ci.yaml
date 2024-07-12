@@ -31,8 +31,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os}}-build-
- }}
+            ${{ runner.os}}-build}}-
   
   build:  # The new job to reuse the cache
     needs: setup
