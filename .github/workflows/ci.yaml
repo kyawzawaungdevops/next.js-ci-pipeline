@@ -48,6 +48,14 @@ jobs:
     needs: dependencies
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Use Node.js from cache
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.17.0'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
       - name: Run tests
         run: npm test
 
@@ -55,6 +63,14 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Use Node.js from cache
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.17.0'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
       - name: Build project
         run: npm run build
       - name: Cache Next.js app cache
@@ -83,4 +99,4 @@ jobs:
           export BUILD_MODULE="next.js-module"
           export BUILD_NUMBER="1"
           export PATH_TO_DIRECTORY="/"
-          jf rt upload "nextjs-build.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD
+          jf rt upload "nextjs-build.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
