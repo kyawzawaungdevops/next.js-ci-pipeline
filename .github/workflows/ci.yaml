@@ -55,5 +55,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
-
-      # ... Your other build steps (test, build, deploy) ...
+      - name: Build project
+        run: npm run build
+      - name: Archive artifacts
+        run: tar -czf nextjs-build.tar.gz .next
