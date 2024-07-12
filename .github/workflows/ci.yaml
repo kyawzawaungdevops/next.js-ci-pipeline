@@ -50,13 +50,10 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-path: ~/.npm
+          path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
-      - name: Verify cache restoration
-        if: steps.restore-npm-cache.outputs.cache-hit != 'true'
-        run: echo "Error: npm cache not found" && exit 1 
 
       # ... Your other build steps (test, build, deploy) ...
