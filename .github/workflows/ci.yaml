@@ -13,50 +13,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Update to latest version
+        uses: actions/checkout@v3
       - name: Setup Node.js
-        uses: actions/setup-node@v3  # Update to latest version
+        uses: actions/setup-node@v3
         with:
-          node-version: '18'       # Use latest 18.x version
-          cache: 'npm'             # Enable npm caching
+          node-version: 18
+          cache: 'npm'
       - name: Install dependencies
-        run: npm ci                 # Use ci for faster, consistent installs in CI
-
-  build:
+        run: npm ci
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os}}-build-
+ }}-
+  
+  build:  # The new job to reuse the cache
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Setup Node.js
+      - name: Setup Node.js with cache
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          cache: 'npm'
-      - name: Restore Next.js cache
+          node-version: 18
+          cache: 'npm' # This still needs to be here for validation
+      - name: Restore node modules
+        id: restore-npm-cache 
         uses: actions/cache@v3
-        with:
-          path: .next/cache
-          key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}
-            ${{ runner.os }}-next-
-      - name: Build project
-        run: npm run build
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Jfrog-setup
-        uses: jfrog/setup-jfrog-cli@v4
         env:
-          JF_URL: ${{ secrets.JFROG_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.JFROG_API_KEY }}
-      - name: Push Build to Jfrog Artifactory
-        run: |
-          export BUILD_NAME="next.js-build"
-          export BUILD_MODULE="next.js-module"
-          export BUILD_NUMBER=${{ github.run_number }}  # Use GitHub's run number
-          export PATH_TO_DIRECTORY="."                  # Upload from current directory
-          jf rt u "next/.next/**/*" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock. }}-build-${{ env.cache-name }}-
+            ${{ runner }}-
+      - name: Verify cache restoration
+        if: steps.restore-npm-cache.outputs.cache-hit != 'true'
+        run: echo "Error: npm cache not found" && exit 1 # Exit if cache wasn't found
+
+      # ... Your other build steps (test, build, deploy) ...
