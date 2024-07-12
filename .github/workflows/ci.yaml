@@ -21,43 +21,42 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Cache node modules
-        id: cache-npm
+      - name: Cache Next.js and node modules
+        id: cache-next-and-npm
         uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            .next/cache 
+            node_modules
+          key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
+            ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-next- 
 
-  build:  
+  build: 
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Setup Node.js with cache
-        uses: actions/setup-node@v3
+      - name: Restore Next.js and node modules cache
+        id: restore-next-and-npm-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            .next/cache 
+            node_modules
+          key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-next- 
+      - name: Setup Node.js 
+        uses: actions/setup-node@v3 
         with:
           node-version: 18
-          cache: 'npm' 
-      - name: Restore node modules
-        id: restore-npm-cache 
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-      - name: Install dependencies
-        run: npm ci
-      - name: Build project
+      - name: Build Next.js Project
         run: npm run build
-      - name: Archive artifacts
-        run: tar -czf nextjs-build.tar.gz .next
+
+      # ... Your other build steps (test, deploy) ...
+
+
