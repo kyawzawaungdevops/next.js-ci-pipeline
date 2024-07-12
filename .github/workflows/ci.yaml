@@ -88,7 +88,7 @@ jobs:
       - name: Run tests
         run: npm test
 
-  upload-artifact: 
+  downloaf-artifact: 
     needs: build  
     runs-on: ubuntu-latest
     steps:
