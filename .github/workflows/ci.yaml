@@ -59,7 +59,28 @@ jobs:
 
       - name: Archive artifacts
         run: tar -czf nextjs-build.tar.gz .next
-
-      # ... Your other build steps (test, deploy) ...
+        
+  test: 
+    needs: setup  
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Restore Next.js and node modules cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            .next/cache 
+            node_modules
+          key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-next-
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Run tests
+        run: npm test
 
 
