@@ -89,7 +89,7 @@ jobs:
         run: npm test
 
   download-artifact: 
-    needs: build  
+    needs: test  
     runs-on: ubuntu-latest
     steps:
       - name: test
