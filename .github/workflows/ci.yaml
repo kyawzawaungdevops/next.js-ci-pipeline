@@ -11,6 +11,8 @@ on:
 jobs:
   setup-Install-Dependencies:
     uses: ./.github/workflows/setup.yaml
+    with:
+       node-version: '18'
 
 
   build: 

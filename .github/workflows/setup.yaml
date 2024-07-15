@@ -3,6 +3,10 @@ name: setup Workflow
 # trigger
 on:
       workflow_call:
+        inputs:
+          version:
+            required: true
+            type: string
 
 jobs:
   test:
@@ -23,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: ${{ inputs.node-version }}
       - name: Run tests
         run: npm test
 
