@@ -32,6 +32,11 @@ jobs:
   upload-artifact-to-JFrog: 
     needs: test  
     uses: ./.github/workflows/upload-artifact.yaml
+    with:
+       BUILD_NAME: 'test'
+       BUILD_MODULE: 'test'
+       BUILD_NUMBER: '1'
+       
     secrets:
       JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
       JF_URL: ${{ secrets.JF_URL }}
