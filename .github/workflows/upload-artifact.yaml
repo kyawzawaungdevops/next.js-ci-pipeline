@@ -2,6 +2,16 @@ name: upload artifact
 
 on:
   workflow_call:
+    inputs:
+          BUILD_NAME:
+            required: true
+            type: string
+          BUILD_MODULE:
+            required: true
+            type: string
+          BUILD_NUMBER:
+            required: true
+            type: string
     secrets:
       JFROG_API_KEY:
         required: true
