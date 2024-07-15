@@ -3,6 +3,11 @@ name: test Workflow
 # trigger
 on:
       workflow_call:
+        inputs:
+          node-version:
+            required: true
+            type: string
+
 
 jobs:
   test:
