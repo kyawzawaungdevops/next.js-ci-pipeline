@@ -14,14 +14,11 @@ jobs:
     with:
        node-version: '20'
 
-
   build: 
     needs: setup-Install-Dependencies
     uses: ./.github/workflows/build.yaml
     with:
        node-version: '20'
-
-
 
   test: 
     needs: build  
@@ -35,8 +32,7 @@ jobs:
     with:
        BUILD_NAME: 'test'
        BUILD_MODULE: 'test'
-       BUILD_NUMBER: '1'
-       
+       BUILD_NUMBER: '1'     
     secrets:
       JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
       JF_URL: ${{ secrets.JF_URL }}
