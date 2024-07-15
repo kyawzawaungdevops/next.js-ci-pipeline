@@ -25,8 +25,14 @@ jobs:
         uses: actions/setup-node@v3 
         with:
           node-version: 18
+
+      - name: Add node_modules/.bin to PATH
+        run: echo "::add-path::$(npm bin)"
+
       - name: Build Next.js Project
-        run: npm run build
+        run: |
+          npm install next
+          npm run build
 
       - name: Archive artifacts
         run: tar -czf nextjs-build.tar.gz .next
