@@ -20,45 +20,8 @@ jobs:
 
   test: 
     needs: build  
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Restore Next.js and node modules cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            .next/cache 
-            node_modules
-          key: ${{ runner.os }}-cache-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-cache-${{ hashFiles('**/package-lock.json') }}-
-            ${{ runner.os }}-cache-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Run tests
-        run: npm test
+    uses: ./.github/workflows/test.yaml
 
   upload-artifact-to-JFrog: 
     needs: test  
-    runs-on: ubuntu-latest
-    steps:
-      - name: test
-        uses: actions/download-artifact@v4
-        with:
-         name: nextjs-build
-      - name: Jfrog-setup
-        uses: jfrog/setup-jfrog-cli@v4
-        env:
-          JF_URL: ${{ vars.JFROG_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.JFROG_API_KEY }} 
-      - name: Push Build to Jfrog-Artifactory
-        run: |
-          export BUILD_NAME="next.js-build"
-          export BUILD_MODULE="next.js-module"
-          export BUILD_NUMBER="1"
-          export PATH_TO_DIRECTORY="/"
-          
-          jf rt upload "nextjs-build.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
+    uses: ./.github/workflows/upload-artifact.yaml
