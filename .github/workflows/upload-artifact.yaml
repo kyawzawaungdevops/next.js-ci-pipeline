@@ -9,8 +9,7 @@ on:
     secrets:
       JFROG_API_KEY:
         required: true
-    vars:
-      JFROG_URL:
+      JF_URL:
         required: true
 
 jobs:
