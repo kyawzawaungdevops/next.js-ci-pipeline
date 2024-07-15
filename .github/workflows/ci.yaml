@@ -25,7 +25,6 @@ jobs:
   upload-artifact-to-JFrog: 
     needs: test  
     uses: ./.github/workflows/upload-artifact.yaml
-    with:
-      jfrog-url: ${{ env.JFROG_URL }}
     secrets:
       JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
+      JF_URL: ${{ secrets.JF_URL }}
