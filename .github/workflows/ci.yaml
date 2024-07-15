@@ -10,7 +10,7 @@ on:
 
 jobs:
   setup-Install-Dependencies:
-    uses: ./.github/workflows/setup.yaml
+    uses: ./.github/workflows/setup-install-dependencies.yaml
     with:
        node-version: '20'
 
@@ -30,7 +30,7 @@ jobs:
     needs: test  
     uses: ./.github/workflows/upload-artifact.yaml
     with:
-       BUILD_NAME: 'testing'
+       BUILD_NAME: 'tes'
        BUILD_MODULE: 'test'
        BUILD_NUMBER: '1'     
     secrets:
