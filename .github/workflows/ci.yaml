@@ -30,7 +30,7 @@ jobs:
     needs: test  
     uses: ./.github/workflows/upload-artifact.yaml
     with:
-       BUILD_NAME: 'test'
+       BUILD_NAME: 'testing'
        BUILD_MODULE: 'test'
        BUILD_NUMBER: '1'     
     secrets:
