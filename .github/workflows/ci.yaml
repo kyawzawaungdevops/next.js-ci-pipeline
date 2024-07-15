@@ -26,6 +26,5 @@ jobs:
     needs: test  
     uses: ./.github/workflows/upload-artifact.yaml
     secrets:
-      version: '1'
       JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
       JF_URL: ${{ secrets.JF_URL }}
