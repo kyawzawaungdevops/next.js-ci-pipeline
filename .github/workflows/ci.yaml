@@ -25,3 +25,5 @@ jobs:
   upload-artifact-to-JFrog: 
     needs: test  
     uses: ./.github/workflows/upload-artifact.yaml
+    secrets:
+      SONAR_TOKEN: ${{ secrets.JFROG_API_KEY }}

@@ -3,6 +3,13 @@ name: upload artifact
 # trigger
 on:
       workflow_call:
+        inputs:
+            version:
+              required: true
+              type: string
+          secrets:
+            JFROG_API_KEY:
+              required: true
 
 jobs:
   upload-artifact:
