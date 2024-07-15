@@ -4,7 +4,7 @@ name: setup Workflow
 on:
       workflow_call:
         inputs:
-          version:
+          node-version:
             required: true
             type: string
 
