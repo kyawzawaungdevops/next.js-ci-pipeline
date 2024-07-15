@@ -1,4 +1,4 @@
-name: setup Workflow
+name: build Workflow
 
 # trigger
 on:
