@@ -12,17 +12,22 @@ jobs:
   setup-Install-Dependencies:
     uses: ./.github/workflows/setup.yaml
     with:
-       node-version: '18'
+       node-version: '20'
 
 
   build: 
     needs: setup-Install-Dependencies
     uses: ./.github/workflows/build.yaml
+    with:
+       node-version: '20'
+
 
 
   test: 
     needs: build  
     uses: ./.github/workflows/test.yaml
+    with:
+       node-version: '20'
 
   upload-artifact-to-JFrog: 
     needs: test  
