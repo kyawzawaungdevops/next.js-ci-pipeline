@@ -29,5 +29,5 @@ jobs:
         run: |
           export BUILD_NAME="next.js-build"
           export BUILD_MODULE="next.js-module"
-          export BUILD_NUMBER="${{ inputs.version }}"
+          export BUILD_NUMBER="1"
           jf rt upload "nextjs-build.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
