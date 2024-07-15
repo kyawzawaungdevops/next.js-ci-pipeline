@@ -9,10 +9,14 @@ on:
       - main
 
 jobs:
+  setup-Install-Dependencies:
+    uses: ./.github/workflows/setup.yaml
 
 
   build: 
-    uses: ./.github/workflows/setup.yaml
+    needs: setup-Install-Dependencies
+    uses: ./.github/workflows/build.yaml
+
 
   test: 
     needs: build  
@@ -26,10 +30,10 @@ jobs:
           path: |
             .next/cache 
             node_modules
-          key: ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-cache-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-next-${{ hashFiles('**/package-lock.json') }}-
-            ${{ runner.os }}-next-
+            ${{ runner.os }}-cache-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-cache-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -45,8 +49,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
          name: nextjs-build
-      - name: Display structure of downloaded files
-        run: ls -R
       - name: Jfrog-setup
         uses: jfrog/setup-jfrog-cli@v4
         env:
@@ -60,4 +62,3 @@ jobs:
           export PATH_TO_DIRECTORY="/"
           
           jf rt upload "nextjs-build.tar.gz" next-landing-page-generic-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
-

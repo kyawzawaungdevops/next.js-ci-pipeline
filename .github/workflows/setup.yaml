@@ -5,8 +5,8 @@ on:
       workflow_call:
 
 jobs:
-  setup:
-    name: Build Laravel App
+  setup-node-dependencies:
+    name: Setup Node.js
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

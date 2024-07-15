@@ -1,0 +1,41 @@
+name: setup Workflow
+
+# trigger
+on:
+      workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Restore Next.js and node modules cache
+        id: restore-next-and-npm-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            .next/cache 
+            node_modules
+          key: ${{ runner.os }}-cache-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-cache-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-cache- 
+      - name: Setup Node.js 
+        uses: actions/setup-node@v3 
+        with:
+          node-version: 18
+      - name: Build Next.js Project
+        run: npm run build
+
+      - name: Archive artifacts
+        run: tar -czf nextjs-build.tar.gz .next
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: nextjs-build.tar.gz
+
+            ${{ runner.os }}-next- 
+
+ 
